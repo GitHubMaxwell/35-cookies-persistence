@@ -2,60 +2,73 @@ import superagent from 'superagent';
 
 // Action Constants
 const SIGN_UP = 'SIGN_UP';
-// const CHECK_LOCAL = 'CHECK_LOCAL';
+const SIGN_UP_ERROR = 'SIGN_UP_ERROR';
 const LOG_IN = 'LOG_IN';
+const LOG_IN_ERROR = 'LOG_IN_ERROR';
+const LOG_OUT = 'LOG_OUT';
+const RESET_ERROR = 'RESET_ERROR';
+
 
 // Action Creators
 export const signUp = payload => {
+    console.log('signin payload: ',payload)
+
 // you get a JWT back from this
-/*
-    {
-        "username":"max",
-        "password":"max",
-        "email":"max@max.com"
-    }
-*/
-    console.log('signup payload: ',payload)
+
+    // console.log('SIGNUP payload: ',payload)
     return dispatch => {
         const url = 'http://localhost:3001/signup'
         
         superagent.post(url)
         .send(payload)
         .then(response => {
-            console.log('signup response.text: ', response.text)
-            
+            // console.log('signup response.text: ', response.text)
+            localStorage.setItem('JWT', response.text)
             return dispatch({type: SIGN_UP, payload: response.text})
         })
-    }
-}
-// export const checkLocal = () => {
-// // check http://localhost:8080 localstorage?
-// // does this even need a URL
-//     return dispatch => {
-//         const url = 'https://lab14-max.herokuapp.com/api/v1/cats';
-//         superagent.get(url)
-//         .then(response => {
-//             return dispatch({type: READ_ITEM, payload : response.body})
-//         })
-//     }
-// }
+        .catch(error => {
+            // console.log('signup error status: ', error.status)
+            return dispatch({type: SIGN_UP_ERROR, payload: error.status})
 
-export const logIn = payload => {
-    //is basic auth requiring username and password
-    // auth('max','max')
-
-    return dispatch => {
-        const url = `http://localhost:3001/login/${payload.id}`;
-        superagent.get(url)
-        .auth(payload)
-        .then(response => {
-            return dispatch({type: LOG_IN, payload: response})
         })
     }
 }
+export const logIn = payload => {
+    console.log('login payload: ',payload)
+
+    return dispatch => {
+        const url = `http://localhost:3001/login`;
+        superagent.get(url)
+        .auth(payload.username, payload.password)
+        .then(response => {
+            localStorage.setItem('JWT', response.text)
+            return dispatch({type: LOG_IN, payload: response.text})
+        })
+        .catch(error => {
+            // console.log('login error status: ', error.status)
+            return dispatch({type: LOG_IN_ERROR, payload: error.status})
+        })
+    }
+}
+export const logOut = () => {
+
+    return dispatch => {
+        return dispatch({type: LOG_OUT})
+    }
+}
+
+export const resetError = () => {
+    return dispatch => {
+        return dispatch({type: RESET_ERROR})
+    }
+}
+
 // Initial State
-// initial state localstorage
-let initialState = [];
+let initialState = {
+    token : '',
+    error : ''
+}
+
 
 // Reducer
 export default (state=initialState,action) => {
@@ -65,12 +78,13 @@ export default (state=initialState,action) => {
     console.log('payload: ',payload)
 
     switch(type) {
-        case 'SIGN_UP' : return [...state,payload]
-        // case 'CHECK_LOCAL' : return [...payload]
-        case 'LOG_IN' : return state.map(item => {
-            return item._id === payload._id ? payload : item
-        })
-        // case 'DELETE_ITEM' : return state.filter(item => item._id !== payload)
+        case SIGN_UP : return {...state,token : payload}
+        case SIGN_UP_ERROR : return {...state,error : payload}
+        case LOG_IN : return {...state,token : payload}
+        case LOG_IN_ERROR : return {...state,error : payload}
+        case LOG_OUT : return initialState
+        case RESET_ERROR : return {...state, error : ''}
+
         default : return state
     }
 }

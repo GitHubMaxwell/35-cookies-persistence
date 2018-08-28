@@ -1,71 +1,39 @@
 import React, {Component, Fragment} from 'react';
-// import superagent from 'superagent';
-import {connect} from 'react-redux';
-import {signUp} from '../../Reducer/reducer.js'
+import { logOut } from '../../Reducer/reducer.js'
+import { connect } from 'react-redux';
+
+import Form from '../../Components/Form/Form.js'
 
 class Landing extends Component {
     constructor(props) {
         super(props)
-        this.signUp = this.signUp.bind(this)
-    }
-
-    signUp(event) {
-        event.preventDefault()
-        let username = event.target.username.value
-        let password = event.target.password.value
-        let email = event.target.email.value
-
-        let obj = {
-            username,
-            password,
-            email
+        this.state = {
+            mode : '',
         }
-
-        console.log('payload',obj)
-        this.props.signUp(obj)
+        this.formMode = this.formMode.bind(this)
     }
 
-    // componentDidMount() {
-    //     // check localstorage to see if the cookie is there and say something like success you are already signed in 
-    //     superagent.get('http://localhost:3001/usernames/max')
-    //     .then(response => {console.log('RESPONSE: ',response)})
-    // }
+    formMode(selection) {
+        let mode = selection;
+        this.setState({mode})
+        this.props.switchMode()
+    }
 
     render() {
         return (
             <Fragment>
-                <h1>Please Log In or Sign Up</h1>
-                <form onSubmit={this.signUp}>
-                    <label>Username:</label>
-                    <input type="text" name="username"/>
-                    <label>Password:</label>
-                    <input type="text" name="password"/>
-                    <label>Email:</label>
-                    <input type="text" name="email"/>
-                    <input onClick={()=>{console.log('signup')}}type="button" name="email" value="Sign Up"/>
-                    <input type="button" name="email" value="Log In"/>
-
-                    <button>Submit</button>
-                </form>
-                {this.props.loggedin.length !== 0 ? localStorage.setItem('JWT',this.props.loggedin): null}
+                <h2>Please Log In or Sign Up</h2>
+                <input onClick={() => this.formMode('signup')} type="button" value="Sign Up"/>
+                <input onClick={() => this.formMode('login')} type="button" value="Log In"/>
+                {this.state.mode !== '' ? <input onClick={() => this.formMode('')} type="button" value="Cancel"/> : null}
+                {this.state.mode !== '' ? <Form mode={this.state.mode}/>: null}
             </Fragment>
         )
     }
 }
 
 const mapDispatchToProps = (dispatch) => ({
-    logIn : (payload) => dispatch(login(payload)),
-    signUp : (payload) => dispatch(signUp(payload)),
-})
-const mapStateToProps = state => ({
-    loggedin : state
+    switchMode : () => dispatch(logOut())
 })
 
-export default connect(mapStateToProps,mapDispatchToProps)(Landing)
-/*
-Create a landing page that enables a user to signup or login
-
-Redirect the user to the dashboard page on signup or login
-
-Store the users token in localstorage on sign in
-*/
+export default connect(null,mapDispatchToProps)(Landing)

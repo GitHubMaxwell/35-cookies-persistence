@@ -1,27 +1,31 @@
-import React, {Component, Fragment} from 'react';
-import superagent from 'superagent';
+import React, { Component, Fragment } from 'react';
+import { logOut } from '../../Reducer/reducer.js'
+import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
 
-export default class Dashboard extends Component {
+class Dashboard extends Component {
 
-    componentDidMount() {
-        // check localstorage to see if the cookie is there and say something like success you are already signed in 
-        superagent.get('http://localhost:3001/usernames/max')
-        .then(response => {console.log('RESPONSE: ',response)})
-    }
-    render() {
-        return (
-            <Fragment>
-                <h1>Hello</h1>
-                <p>World</p>
-            </Fragment>
-        )
+        render() {
+            if(!this.props.token) {
+                return <Redirect to={{pathname: "/"}}/>
+            } else {
+            return (
+                <Fragment>
+                    <h1>Dashboard</h1>
+                    <p>you have successfully logged in/signed up</p>
+                    <input onClick={this.props.logOut} type="button" value="Log Out"/>
+                </Fragment>
+            )
+        }
     }
 }
 
-/*
-Create a landing page that enables a user to signup or login
+const mapDispatchToProps = (dispatch) => ({
+    logOut : () => dispatch(logOut()),
+})
 
-Redirect the user to the dashboard page on signup or login
+const mapStateToProps = state => ({
+    token : state.token
+})
 
-Store the users token in a cookie or localstorage on sign in
-*/
+export default connect(mapStateToProps,mapDispatchToProps)(Dashboard)
