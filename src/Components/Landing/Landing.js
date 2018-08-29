@@ -8,7 +8,7 @@ class Landing extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            mode : '',
+            mode : 'login',
         }
         this.formMode = this.formMode.bind(this)
     }
@@ -22,11 +22,18 @@ class Landing extends Component {
     render() {
         return (
             <Fragment>
-                <h2>Please Log In or Sign Up</h2>
-                <input onClick={() => this.formMode('signup')} type="button" value="Sign Up"/>
-                <input onClick={() => this.formMode('login')} type="button" value="Log In"/>
-                {this.state.mode !== '' ? <input onClick={() => this.formMode('')} type="button" value="Cancel"/> : null}
-                {this.state.mode !== '' ? <Form mode={this.state.mode}/>: null}
+                <div className="container">
+                    <div className="inner-container">
+                        <h2>Please Log In or Sign Up</h2>
+                        <input id="signup" onClick={() => this.formMode('signup')} type="button" value="Sign Up"/>
+
+                        <input id="login" onClick={() => this.formMode('login')} type="button" value="Log In"/>
+
+                        {this.state.mode !== '' ? <Form formMode={this.formMode} mode={this.state.mode}/>: null}
+
+                        {this.state.mode !== '' ? <input id="cancel" onClick={() => this.formMode('')} type="button" value="Cancel"/> : null}
+                    </div>
+                </div>
             </Fragment>
         )
     }

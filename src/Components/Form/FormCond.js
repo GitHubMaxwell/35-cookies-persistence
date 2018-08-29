@@ -14,20 +14,23 @@ export default class FormCond extends Component {
         return(
             this.props.mode === 'signup' ? 
                 <form id="form">
-                <label>Username:</label>
-                <input id="username" type="text" name="username"/>
-                <label>Password:</label>
-                <input id="password" type="text" name="password"/>
-                <label>Email:</label>
-                <input id="email" type="text" name="email"/>
-                <input onClick={this.props.enterForm} type="button" name="email" value="Sign Up"/>
+
+                <input id="username" type="text" name="username" placeholder="Username"/>
+
+                <input id="password" type="text" name="password" placeholder="Password"/>
+
+                <input id="email" type="text" name="email" placeholder="E-mail"/>
+
+                <input id="enter" onClick={this.props.enterForm} type="button" value="Submit"/>
+
             </form> : this.props.mode === 'login' ?
             <form id="form">
-                <label>Username:</label>
-                <input id="username" type="text" name="username"/>
-                <label>Password:</label>
-                <input id="password" type="text" name="password"/>
-                <input onClick={this.props.enterForm} type="button" name="email" value="Log In"/>
+                <input id="username" type="text" name="username" placeholder="Username"/>
+
+                <input id="password" type="text" name="password" placeholder="Password"/>
+
+                <input id ="enter" onClick={this.props.enterForm} type="button" value="Submit"/>
+
             </form> : null 
         )
     }
