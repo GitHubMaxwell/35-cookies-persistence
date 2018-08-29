@@ -11,7 +11,7 @@ const RESET_ERROR = 'RESET_ERROR';
 
 // Action Creators
 export const signUp = payload => {
-    console.log('signin payload: ',payload)
+    // console.log('signin payload: ',payload)
 
 // you get a JWT back from this
 
@@ -34,7 +34,7 @@ export const signUp = payload => {
     }
 }
 export const logIn = payload => {
-    console.log('login payload: ',payload)
+    // console.log('login payload: ',payload)
 
     return dispatch => {
         const url = `http://localhost:3001/login`;
@@ -74,8 +74,8 @@ let initialState = {
 export default (state=initialState,action) => {
     let {type, payload} = action;
 
-    console.log('action type: ',type)
-    console.log('payload: ',payload)
+    // console.log('action type: ',type)
+    // console.log('payload: ',payload)
 
     switch(type) {
         case SIGN_UP : return {...state,token : payload}

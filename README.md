@@ -1,7 +1,7 @@
 ![cf](http://i.imgur.com/7v5ASc8.png) 35: Cookies / Local Persistence
 ===
 ## Link
- * Github PR: https://github.com/GitHubMaxwell/35-cookies-persistence/pull/1
+ * Github PR:
  * Travis: 
 
 ## Instructions

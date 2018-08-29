@@ -1,65 +1,46 @@
-import reducer, { signUp, logIn } from '../../../src/Reducer/reducer.js'
+import reducer from '../../../src/Reducer/reducer.js'
 
 describe('Reducers', ()=> {
-    xit('Test: return orignal state on passing in an incorrect/invalid action', () => {
-        let state = {
-            rootReducer: [],
-        }
-        const red = reducer(state, 'wrong')
-        expect(red).toEqual({
-            rootReducer: [],
-        })
-    })
 
-    xit('SIGN_UP Success', () => {
+    it('SIGN_UP Success', () => {
 
-        let cat = {
-            type: 'CREATE_ITEM',
+        let oldState = { 
+            token: '', 
+            error: ''
+        };
+
+        let action = {
+            type: 'SIGN_UP',
             payload: {
-                name : 'cat',
-                color : 'green'
-            } 
+                token : 'thisisamagicaltoken',
+            }
         }
 
-        let state = reducer([], cat);
-        let newState = [ { name: 'cat', color: 'green' } ];
+        let state = reducer(oldState, action);
+        let newState = {"error": "", "token": {"token":"thisisamagicaltoken"}};
         expect(state).toEqual(newState)
     })
 
-    xit('SIGN_UP Fail', () => {
-
-        let cat = { 
-            type : 'READ_ITEM',
-            payload : [{ name: 'cat', color: 'green', _id: 1 }]
+    it('SIGN_UP_ERROR', () => {
+        let oldState = { 
+            token: '', 
+            error: ''
         };
 
-        let readState = reducer([], cat)
-
-        expect(readState.length).toEqual(1)
-        expect(readState).toEqual([{ name: 'cat', color: 'green', _id: 1 }])
-    })
-
-    xit('LOG_IN Success', () => {
-
-        let oldState = [ { name: 'cat', color: 'green', _id: 1 } ];
-
-        let dog = {
-            type: 'UPDATE_ITEM',
+        let action = {
+            type: 'SIGN_UP_ERROR',
             payload: {
-                name : 'dog',
-                color : 'yellow',
-                _id : 1
-            } 
+                token : '',
+                error : 400
+            }
         }
-        let state = reducer(oldState, dog);
-        let updateState = [ { name: 'dog', color: 'yellow', _id: 1 } ];
 
-        expect(state).toEqual(updateState)
+        let state = reducer(oldState, action);
+        expect(state.error).toEqual({"error": 400, "token": ""})
     })
 
-    it('LOG_IN Fail', () => {
+    it('LOG_IN Success', () => {
 
-        // need to use Jest done() ?
         let oldState = { 
             token: '', 
             error: ''
@@ -68,17 +49,34 @@ describe('Reducers', ()=> {
         let action = {
             type: 'LOG_IN',
             payload: {
-                username : 'max',
-                password : ''
+                token : 'thisisamagicaltoken',
             }
         }
 
         let state = reducer(oldState, action);
 
-        // expect(state.token).not.toBeDefined()
-        expect(state.error).toBe(401)
-
+        expect(state.token).toEqual({"token": "thisisamagicaltoken"})
     })
+
+    it('LOG_IN_ERROR', () => {
+
+        let oldState = { 
+            token: '', 
+            error: ''
+        };
+
+        let action = {
+            type: 'LOG_IN_ERROR',
+            payload: {
+                token : '',
+                error : 401
+            }
+        }
+
+        let state = reducer(oldState, action);
+        expect(state.error).toEqual({"error": 401, "token": ""})
+    })
+
     it('LOG_OUT Success', () => {
         
         let oldState = { 
